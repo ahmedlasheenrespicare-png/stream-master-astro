@@ -1,0 +1,138 @@
+# =============================================================================
+# Decap CMS Configuration
+# يحدد: كيفية المصادقة، المجموعات، الحقول، المعاينة
+# =============================================================================
+
+# الإعدادات الأساسية
+backend:
+  name: github
+  repo: ahmedlasheenrespicare-png/stream-master-astro # ← اسمك على GitHub
+  branch: main
+  base_url: https://ahmedlashin.netlify.app/ # ← موقع Netlify لـ OAuth Proxy
+  auth_endpoint: auth
+
+# إذا كنت تستخدم Netlify:
+# backend:
+#   name: git-gateway
+#   branch: main
+
+# للتطوير المحلي:
+# backend:
+#   name: proxy
+#   proxy_url: http://localhost:8081/api/v1
+
+# الإعدادات العامة
+site_url: https://streammasterstore.com
+display_url: https://streammasterstore.com
+logo_url: /icon-192.png
+locale: ar
+
+# وسائط الرفع (الصور)
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+# مسارات البحث عند النشر
+publish_mode: editorial_workflow # draft → ready → published
+
+# =============================================================================
+# المجموعات (Collections) - تطابق Astro Content Collections
+# =============================================================================
+
+collections:
+  # ---------------------------------------------------------------------
+  # 1. المدوّنة
+  # ---------------------------------------------------------------------
+  - name: "blog"
+    label: "المدوّنة"
+    label_singular: "مقال"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}" # يستخدم عنوان المقال كـ slug
+    extension: "md"
+    format: "frontmatter"
+    summary: "{{title}} — {{publishedAt | date('YYYY-MM-DD')}}"
+    sortable_fields: ["publishedAt", "title", "category"]
+    view_groups:
+      - label: "حسب السنة"
+        field: "publishedAt"
+    fields: &blog_fields
+      - { label: "العنوان", name: "title", widget: "string", hint: "عنوان جذاب، 50-70 حرف مثاليًا لـ SEO" }
+      - { label: "الوصف (Meta Description)", name: "description", widget: "text", hint: "يظهر في نتائج Google، 150-160 حرف" }
+      - { label: "مقتطف", name: "excerpt", widget: "text", hint: "يظهر في بطاقة المقال، 100-200 حرف" }
+      - { label: "تاريخ النشر", name: "publishedAt", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
+      - { label: "تاريخ التحديث", name: "updatedAt", widget: "datetime", required: false, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
+      - { label: "الكاتب", name: "author", widget: "string", default: "فريق ستريم ماستر" }
+      - { label: "الفئة", name: "category", widget: "select", options: ["مراجعات", "أدلة", "أخبار", "مقارنات", "البطولات"] }
+      - { label: "الوسوم", name: "tags", widget: "list", required: false, hint: "كل وسم يضغط SEO. مثل: IPTV، السعودية، 2026" }
+      - { label: "الصورة الرئيسية", name: "image", widget: "image", required: false, allow_multiple: false, hint: "الصورة تظهر في بطاقة المقال والمشاركة على وسائل التواصل. الحد الأدنى 1280px عرض." }
+      - { label: "وصف الصورة (alt)", name: "imageAlt", widget: "string", required: false, hint: "مهم لـ SEO وإمكانية الوصول" }
+      - { label: "وقت القراءة (دقائق)", name: "readingTime", widget: "number", required: false, default: 5, value_type: "int", min: 1, max: 60 }
+      - { label: "مقال مميز", name: "featured", widget: "boolean", default: false, hint: "المقالات المميزة تظهر في الصفحة الرئيسية" }
+      - { label: "مسودة (لا تنشر)", name: "draft", widget: "boolean", default: false }
+      - { label: "محتوى المقال", name: "body", widget: "markdown", hint: "يدعم Markdown كامل. استخدم ## للعناوين الفرعية." }
+
+  # ---------------------------------------------------------------------
+  # 2. السيرفرات
+  # ---------------------------------------------------------------------
+  - name: "servers"
+    label: "السيرفرات"
+    label_singular: "سيرفر"
+    folder: "src/content/servers"
+    create: true
+    slug: "{{name}}"
+    extension: "md"
+    format: "frontmatter"
+    summary: "{{displayName}} — {{tagline}}"
+    fields:
+      - { label: "اسم (slug)", name: "name", widget: "select", options: ["falcon", "shark", "hulk", "aronium", "istar"], hint: "لا يمكن تغييره بعد النشر" }
+      - { label: "اسم العرض", name: "displayName", widget: "string", hint: "مثل: فالكون" }
+      - { label: "شعار قصير", name: "tagline", widget: "string", hint: "مثل: الأقوى. الأوضح. الأفضل." }
+      - { label: "الأيقونة (emoji)", name: "icon", widget: "string", hint: "مثل: 🦅 - سطر واحد emoji" }
+      - { label: "اللون", name: "color", widget: "select", options: ["red", "amber", "green", "blue", "purple"] }
+      - { label: "الترتيب", name: "order", widget: "number", default: 1, value_type: "int", min: 1, max: 10 }
+      - { label: "شارة (اختياري)", name: "badge", widget: "string", required: false, hint: "مثل: الأكثر طلباً، الأفضل للمباريات، جديد" }
+      - label: "المواصفات"
+        name: "specs"
+        widget: "object"
+        fields:
+          - { label: "الجودة", name: "quality", widget: "string", hint: "مثل: حتى 8K، حتى 4K" }
+          - { label: "الثبات (Uptime)", name: "uptime", widget: "string", hint: "مثل: 99.9%" }
+          - { label: "عدد الأجهزة المتزامنة", name: "devices", widget: "number", value_type: "int", min: 1, max: 5 }
+          - { label: "عدد القنوات", name: "channels", widget: "string", hint: "مثل: +15,000" }
+          - { label: "مكتبة VOD", name: "vod", widget: "string", hint: "مثل: +50,000" }
+          - { label: "Catch-up", name: "catchup", widget: "string", hint: "مثل: 7 أيام" }
+      - { label: "مناسب لـ (جمهور)", name: "bestFor", widget: "list", hint: "مثل: أصحاب أجهزة 4K، محبي المباريات" }
+      - { label: "المميزات الرئيسية", name: "features", widget: "list", hint: "5 مميزات رئيسية كحد أقصى" }
+      - { label: "مسودة", name: "draft", widget: "boolean", default: false }
+      - { label: "المحتوى الكامل", name: "body", widget: "markdown" }
+
+  # ---------------------------------------------------------------------
+  # 3. الصفحات الثابتة (الشروط، الخصوصية...)
+  # ---------------------------------------------------------------------
+  - name: "pages"
+    label: "الصفحات الثابتة"
+    label_singular: "صفحة"
+    folder: "src/content/pages"
+    create: false # لا تنشئ صفحات جديدة من اللوحة
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+    fields:
+      - { label: "العنوان", name: "title", widget: "string" }
+      - { label: "الوصف", name: "description", widget: "text" }
+      - { label: "تاريخ التحديث", name: "updatedAt", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "إظهار في الفوتر", name: "showInFooter", widget: "boolean", default: false }
+      - { label: "مسودة", name: "draft", widget: "boolean", default: false }
+      - { label: "المحتوى", name: "body", widget: "markdown" }
+
+# =============================================================================
+# الإعدادات المتقدمة
+# =============================================================================
+
+# CSS مخصص للوحة الإدارة
+locale: ar
+search: true
+
+# أوضاع المعاينة (Preview) - تظهر كزر في اللوحة
+# تتطلب GitHub App أو Netlify Identity
+# preview_path: "preview/{{slug}}"
