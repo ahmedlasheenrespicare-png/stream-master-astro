@@ -1,0 +1,198 @@
+---
+/**
+ * صفحة مقال واحد في المدوّنة
+ * ديناميكية - تولّد صفحة لكل ملف .md في src/content/blog/
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { articleSchema, breadcrumbSchema, fullUrl } from '../../lib/seo';
+import { SITE } from '../../consts';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props as Props;
+const { Content } = await post.render();
+
+const dateFormatter = new Intl.DateTimeFormat('ar-SA', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const canonicalUrl = fullUrl(`/blog/${post.slug}/`);
+
+// Schema.org: Article + Breadcrumb
+const schemas = [
+  articleSchema({
+    title: post.data.title,
+    description: post.data.description,
+    url: canonicalUrl,
+    image: post.data.image ?? '/images/og-default.png',
+    publishedTime: post.data.publishedAt,
+    modifiedTime: post.data.updatedAt,
+    author: post.data.author,
+  }),
+  breadcrumbSchema([
+    { name: 'الرئيسية', url: SITE.url },
+    { name: 'المدوّنة', url: fullUrl('/blog/') },
+    { name: post.data.title, url: canonicalUrl },
+  ]),
+];
+
+// مقالات ذات صلة (نفس الفئة)
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const related = allPosts
+  .filter(
+    (p) => p.slug !== post.slug && p.data.category === post.data.category
+  )
+  .slice(0, 3);
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  ogImage={post.data.image}
+  ogType="article"
+  additionalSchema={schemas}
+>
+  <article class="section">
+    <div class="container-app max-w-4xl">
+      {/* Breadcrumb */}
+      <nav class="mb-6 text-sm text-gray-400" aria-label="مسار التنقل">
+        <ol class="flex flex-wrap items-center gap-2">
+          <li>
+            <a href="/" class="hover:text-white">الرئيسية</a>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li>
+            <a href="/blog/" class="hover:text-white">المدوّنة</a>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li class="text-white">{post.data.title}</li>
+        </ol>
+      </nav>
+
+      <header class="mb-10">
+        <div class="mb-4 flex flex-wrap items-center gap-3 text-sm text-gray-400">
+          <span class="badge">{post.data.category}</span>
+          <time datetime={post.data.publishedAt.toISOString()}>
+            📅 {dateFormatter.format(post.data.publishedAt)}
+          </time>
+          {post.data.readingTime && (
+            <span>⏱️ {post.data.readingTime} دقيقة قراءة</span>
+          )}
+          <span>👤 {post.data.author}</span>
+        </div>
+
+        <h1 class="mb-6 text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">
+          {post.data.title}
+        </h1>
+
+        <p class="text-lg leading-relaxed text-gray-300">
+          {post.data.excerpt}
+        </p>
+      </header>
+
+      {/* صورة المقال الرئيسية */}
+      {
+        post.data.image && (
+          <div class="mb-10 overflow-hidden rounded-3xl border border-white/10">
+            <img
+              src={post.data.image}
+              alt={post.data.imageAlt ?? post.data.title}
+              loading="eager"
+              decoding="async"
+              class="aspect-video-16-9 w-full object-cover"
+            />
+          </div>
+        )
+      }
+
+      {/* محتوى المقال */}
+      <div
+        class="prose prose-invert max-w-none prose-headings:font-black prose-headings:text-white prose-a:text-brand-red-light prose-a:no-underline hover:prose-a:underline prose-strong:text-white prose-blockquote:border-brand-red prose-blockquote:bg-brand-red/10 prose-blockquote:text-gray-200 prose-code:rounded prose-code:bg-white/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:text-brand-red-light prose-pre:bg-brand-bg-soft prose-li:text-gray-300"
+      >
+        <Content />
+      </div>
+
+      {/* الوسوم */}
+      {
+        post.data.tags.length > 0 && (
+          <div class="mt-10 border-t border-white/10 pt-8">
+            <h3 class="mb-3 text-sm font-black text-white">الوسوم:</h3>
+            <div class="flex flex-wrap gap-2">
+              {post.data.tags.map((tag) => (
+                <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-gray-400">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      {/* CTA بعد المقال */}
+      <div
+        class="mt-12 rounded-3xl border border-brand-red/30 bg-gradient-to-br from-brand-red/10 to-brand-bg-soft p-8 text-center"
+      >
+        <h3 class="mb-3 text-2xl font-black text-white">
+          جاهز للاشتراك؟
+        </h3>
+        <p class="mb-6 text-gray-300">
+          اختر سيرفرك المفضل وابدأ المشاهدة بجودة استثنائية.
+        </p>
+        <a href="/store/" class="btn-primary">
+          تصفّح الباقات
+        </a>
+      </div>
+
+      {/* مقالات ذات صلة */}
+      {
+        related.length > 0 && (
+          <section class="mt-16" aria-labelledby="related-heading">
+            <h2 id="related-heading" class="mb-6 text-2xl font-black text-white">
+              مقالات ذات صلة
+            </h2>
+            <div class="grid gap-6 md:grid-cols-3">
+              {related.map((p) => (
+                <article class="card group overflow-hidden p-0">
+                  <a href={`/blog/${p.slug}/`}>
+                    {p.data.image && (
+                      <div class="relative aspect-video-16-9 overflow-hidden bg-brand-bg-soft">
+                        <img
+                          src={p.data.image}
+                          alt={p.data.imageAlt ?? p.data.title}
+                          loading="lazy"
+                          class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                      </div>
+                    )}
+                    <div class="p-5">
+                      <h3 class="mb-2 line-clamp-2 text-base font-black leading-tight text-white transition-colors group-hover:text-brand-red-light">
+                        {p.data.title}
+                      </h3>
+                      <p class="line-clamp-2 text-xs text-gray-400">
+                        {p.data.excerpt}
+                      </p>
+                    </div>
+                  </a>
+                </article>
+              ))}
+            </div>
+          </section>
+        )
+      }
+    </div>
+  </article>
+</BaseLayout>

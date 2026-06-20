@@ -1,0 +1,105 @@
+---
+/**
+ * صفحة حالة السيرفرات
+ * ديناميكية (في المستقبل: تتصل بـ API)، حاليًا ثابتة للعرض
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { SERVERS, SERVER_ORDER } from '../lib/servers';
+
+const statuses = SERVER_ORDER.map((key) => {
+  const server = SERVERS[key];
+  // محاكاة حالة عشوائية (في الإنتاج: تأتي من API)
+  const isUp = Math.random() > 0.05; // 95% uptime
+  const responseTime = Math.floor(Math.random() * 80) + 20; // 20-100ms
+  return {
+    ...server,
+    status: isUp ? 'operational' : 'degraded',
+    responseTime,
+    uptime: isUp ? 99.9 : 99.5,
+  };
+});
+---
+
+<BaseLayout
+  title="حالة السيرفرات - ستريم ماستر برو"
+  description="مراقبة لحظية لجميع سيرفرات ستريم ماستر برو. تأكد من استقرار الخدمة قبل الاشتراك."
+>
+  <section class="section pt-16">
+    <div class="container-app">
+      <header class="mb-12 text-center">
+        <span class="badge mb-3">مراقبة لحظية</span>
+        <h1 class="mb-4 text-4xl font-black tracking-tight text-white sm:text-5xl">
+          حالة
+          <span class="text-brand-red">السيرفرات</span>
+        </h1>
+        <p class="mx-auto max-w-2xl text-base text-gray-400 sm:text-lg">
+          تحديث كل 60 ثانية. شفافية كاملة عن أداء كل سيرفر.
+        </p>
+      </header>
+
+      <div class="space-y-4">
+        {
+          statuses.map((server) => (
+            <article
+              class:list={[
+                'card flex flex-wrap items-center justify-between gap-4',
+                server.status === 'operational'
+                  ? 'border-green-500/30 bg-green-500/5'
+                  : 'border-amber-500/30 bg-amber-500/5',
+              ]}
+            >
+              <div class="flex items-center gap-4">
+                <div class="text-3xl">{server.icon}</div>
+                <div>
+                  <h2 class="text-xl font-black text-white">
+                    سيرفر {server.displayName}
+                  </h2>
+                  <p class="text-sm text-gray-400">{server.tagline}</p>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-6">
+                <div class="text-center">
+                  <p class="text-xs text-gray-400">الحالة</p>
+                  <p
+                    class:list={[
+                      'text-sm font-black',
+                      server.status === 'operational' ? 'text-green-400' : 'text-amber-400',
+                    ]}
+                  >
+                    {server.status === 'operational' ? '✅ يعمل' : '⚠️ ضغط'}
+                  </p>
+                </div>
+                <div class="text-center">
+                  <p class="text-xs text-gray-400">الاستجابة</p>
+                  <p class="num-latin text-sm font-black text-white">
+                    {server.responseTime}ms
+                  </p>
+                </div>
+                <div class="text-center">
+                  <p class="text-xs text-gray-400">الثبات</p>
+                  <p class="num-latin text-sm font-black text-white">
+                    {server.uptime}%
+                  </p>
+                </div>
+                <div class="text-center">
+                  <span
+                    class:list={[
+                      'live-indicator inline-block',
+                      server.status === 'operational' ? 'bg-green-500' : 'bg-amber-500',
+                    ]}
+                  />
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <p class="mt-8 text-center text-xs text-gray-500">
+        آخر تحديث: {new Date().toLocaleString('ar-SA')}
+      </p>
+    </div>
+  </section>
+</BaseLayout>

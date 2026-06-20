@@ -1,0 +1,205 @@
+---
+/**
+ * BaseLayout - القالب الأساسي لكل صفحات الموقع
+ * يحتوي على: <head> كامل، Header، Footer، Schema.org
+ */
+
+import '@styles/global.css';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import { SITE, DEFAULT_SEO, ONESIGNAL } from '../../consts';
+import { ORGANIZATION_SCHEMA, WEBSITE_SCHEMA } from '../../lib/seo';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article' | 'product';
+  noindex?: boolean;
+  canonical?: string;
+  additionalSchema?: Record<string, unknown>[];
+  bodyClass?: string;
+}
+
+const {
+  title,
+  description = DEFAULT_SEO.description,
+  ogImage = DEFAULT_SEO.ogImage,
+  ogType = 'website',
+  noindex = false,
+  canonical,
+  additionalSchema = [],
+  bodyClass = '',
+} = Astro.props;
+
+const pageTitle = title ? `${title} | ${SITE.name}` : DEFAULT_SEO.defaultTitle;
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, SITE.url).toString();
+const ogImageUrl = new URL(ogImage, SITE.url).toString();
+
+// تجميع كل الـ schemas في مصفوفة واحدة
+const allSchemas = [ORGANIZATION_SCHEMA, WEBSITE_SCHEMA, ...additionalSchema];
+---
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    {/* SEO الأساسي */}
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+
+    {/* hreflang للدول العربية (تكرار الموقع الحالي) */}
+    <link rel="alternate" hreflang="ar" href={canonicalUrl} />
+    <link rel="alternate" hreflang="ar-SA" href={canonicalUrl} />
+    <link rel="alternate" hreflang="ar-AE" href={canonicalUrl} />
+    <link rel="alternate" hreflang="ar-KW" href={canonicalUrl} />
+    <link rel="alternate" hreflang="ar-QA" href={canonicalUrl} />
+    <link rel="alternate" hreflang="ar-BH" href={canonicalUrl} />
+    <link rel="alternate" hreflang="ar-OM" href={canonicalUrl} />
+    <link rel="alternate" hreflang="ar-EG" href={canonicalUrl} />
+    <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
+
+    {/* Open Graph */}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content="ar_SA" />
+    <meta property="og:site_name" content={SITE.name} />
+
+    {/* Twitter Card */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content={DEFAULT_SEO.twitterHandle} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    {/* PWA */}
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#1a1233" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content={SITE.name} />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+
+    {/* Schema.org JSON-LD */}
+    {
+      allSchemas.map((schema) => (
+        <script
+          type="application/ld+json"
+          set:html={JSON.stringify(schema)}
+        />
+      ))
+    }
+
+    {/* Tajawal Font - بديل محسّن عن خطوط Google (أسرع) */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap"
+    />
+
+    {/* OneSignal Web Push SDK - تحميل Lazy */}
+    <script
+      is:inline
+      define:vars={{ ONESIGNAL_APP_ID: ONESIGNAL.appId }}
+    >
+      // تحميل OneSignal SDK فقط بعد أول تفاعل أو requestIdleCallback
+      // (لا يعطّل LCP - Largest Contentful Paint)
+      (function () {
+        var loaded = false;
+        var SDK_URL = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
+
+        function loadSDK() {
+          if (loaded) return;
+          loaded = true;
+
+          window.OneSignalDeferred = window.OneSignalDeferred || [];
+          window.OneSignalDeferred.push(async function (OneSignal) {
+            await OneSignal.init({
+              appId: ONESIGNAL_APP_ID,
+              serviceWorkerParam: { scope: '/' },
+              serviceWorkerPath: '/OneSignalSDKWorker.js',
+              notifyButton: { enable: false },
+              welcomeNotification: {
+                title: 'مرحباً بك في ستريم ماستر برو',
+                message: 'ستصلك إشعارات بالعروض والمباريات المهمة',
+              },
+            });
+          });
+
+          var s = document.createElement('script');
+          s.src = SDK_URL;
+          s.defer = true;
+          s.crossOrigin = 'anonymous';
+          document.head.appendChild(s);
+        }
+
+        // تحميل بعد idle أو بعد أول تفاعل
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(loadSDK, { timeout: 4000 });
+        } else {
+          window.addEventListener('load', function () {
+            setTimeout(loadSDK, 1500);
+          });
+        }
+
+        ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(function (ev) {
+          window.addEventListener(ev, loadSDK, { once: true, passive: true });
+        });
+      })();
+    </script>
+  </head>
+
+  <body class={`min-h-screen bg-brand-bg text-gray-100 antialiased ${bodyClass}`}>
+    {/* خلفية ديكورية ثابتة - تعطي العمق البصري */}
+    <div
+      aria-hidden="true"
+      class="pointer-events-none fixed inset-0 z-0 bg-noise-pattern opacity-30"
+    >
+    </div>
+
+    <Header />
+
+    <main id="main-content" class="relative z-10">
+      <slot />
+    </main>
+
+    <Footer />
+
+    {/* زر WhatsApp العائم */}
+    <a
+      href={`https://wa.me/${SITE.whatsapp.replace('+', '')}`}
+      target="_blank"
+      rel="noopener"
+      aria-label="تواصل معنا عبر WhatsApp"
+      class="fixed bottom-6 left-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-2xl shadow-green-500/30 transition-all hover:scale-110 hover:bg-green-600 sm:bottom-8 sm:left-8 sm:h-16 sm:w-16"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        class="h-7 w-7 sm:h-8 sm:w-8"
+      >
+        <path
+          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
+        />
+      </svg>
+    </a>
+  </body>
+</html>

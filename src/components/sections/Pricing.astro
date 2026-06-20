@@ -1,0 +1,180 @@
+---
+/**
+ * Pricing Section - جدول الأسعار لباقات كأس العالم
+ * يعرض جميع الخطط من أرخص سيرفر (فالكون) مع خيارات باقي السيرفرات
+ */
+
+import { SERVER_PRICING, formatPrice } from '../../lib/pricing';
+import { SERVERS, SERVER_ORDER } from '../../lib/servers';
+import { SITE } from '../../consts';
+
+const duration = 3 as const; // عرض خطط 3 أشهر (الأكثر طلباً)
+---
+
+<section id="pricing" class="section relative" aria-labelledby="pricing-heading">
+  <div class="container-app">
+    <div class="mb-12 text-center">
+      <span class="badge mb-3">قائمة الأسعار</span>
+      <h2 id="pricing-heading" class="section-title">
+        قائمة أسعار
+        <span class="text-brand-red">اشتراكات IPTV</span>
+      </h2>
+      <p class="section-subtitle">
+        اختر المدة المناسبة لك. كل الخطط تشمل نفس القنوات والمميزات،
+        مع توفير أكبر كلما زادت المدة.
+      </p>
+    </div>
+
+    {/* مبدّل السيرفرات */}
+    <div class="mb-10 flex flex-wrap items-center justify-center gap-2">
+      {
+        SERVER_ORDER.map((key) => {
+          const server = SERVERS[key];
+          return (
+            <button
+              type="button"
+              data-server={key}
+              class:list={[
+                'server-toggle flex items-center gap-2 rounded-full border-2 px-5 py-2.5 text-sm font-black transition-all',
+                key === 'falcon'
+                  ? 'border-brand-red bg-brand-red/10 text-white'
+                  : 'border-white/10 bg-white/5 text-gray-400 hover:border-white/20 hover:text-white',
+              ]}
+            >
+              <span class="text-lg">{server.icon}</span>
+              <span>{server.displayName}</span>
+            </button>
+          );
+        })
+      }
+    </div>
+
+    {/* جدول الأسعار */}
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      {
+        SERVER_ORDER.map((serverKey) => {
+          const serverPricing = SERVER_PRICING[serverKey];
+          const serverInfo = SERVERS[serverKey];
+          return serverPricing.plans.map((plan) => (
+            <article
+              class:list={[
+                'price-card group',
+                plan.popular && 'lg:scale-105 lg:shadow-2xl lg:shadow-red-500/20',
+              ]}
+              data-popular={plan.popular ? 'true' : undefined}
+              data-server={serverKey}
+            >
+              {plan.popular && (
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-red px-4 py-1 text-xs font-black text-white shadow-lg shadow-red-500/30">
+                  ⭐ الأكثر طلباً
+                </div>
+              )}
+
+              <div class="mb-2 flex items-center gap-2 text-xs font-bold text-gray-400">
+                <span class="text-base">{serverInfo.icon}</span>
+                <span>{serverInfo.displayName}</span>
+              </div>
+
+              <h3 class="mb-4 text-xl font-black text-white">{plan.label}</h3>
+
+              {/* السعر */}
+              <div class="mb-2 flex items-baseline gap-2">
+                <span class="num-latin text-4xl font-black text-white">
+                  {formatPrice(plan.priceSar)}
+                </span>
+              </div>
+              {plan.originalPrice && (
+                <div class="mb-2 flex items-center gap-2 text-xs">
+                  <span class="num-latin text-gray-500 line-through">
+                    {formatPrice(plan.originalPrice)}
+                  </span>
+                  {plan.savePercent && (
+                    <span class="badge bg-green-500/10 text-green-400">
+                      وفّر {plan.savePercent}%
+                    </span>
+                  )}
+                </div>
+              )}
+
+              <div class="my-6 h-px bg-white/10" />
+
+              {/* المميزات */}
+              <ul class="mb-6 space-y-2 text-sm">
+                {plan.features.map((feature) => (
+                  <li class="flex items-center gap-2 text-gray-300">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="3"
+                      class="h-4 w-4 shrink-0 text-green-400"
+                    >
+                      <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <a
+                href={`https://wa.me/${SITE.whatsapp.replace('+', '')}?text=${encodeURIComponent(
+                  `مرحبًا، أرغب في الاشتراك في سيرفر ${serverInfo.displayName} - باقة ${plan.label}`
+                )}`}
+                target="_blank"
+                rel="noopener"
+                class:list={[
+                  'flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-black transition-all',
+                  plan.popular
+                    ? 'bg-brand-red text-white shadow-lg shadow-red-500/30 hover:bg-red-700'
+                    : 'border border-white/20 bg-white/5 text-white hover:bg-white/10',
+                ]}
+              >
+                <span>اطلب الآن</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  class="h-4 w-4 rotate-180"
+                >
+                  <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </a>
+            </article>
+          ));
+        })
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  // مبدّل السيرفرات في قسم الأسعار
+  const toggles = document.querySelectorAll<HTMLButtonElement>('.server-toggle');
+  const cards = document.querySelectorAll<HTMLElement>('[data-server].price-card');
+
+  toggles.forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      const targetServer = toggle.dataset.server;
+
+      // تحديث المظهر النشط للأزرار
+      toggles.forEach((t) => {
+        t.classList.remove('border-brand-red', 'bg-brand-red/10', 'text-white');
+        t.classList.add('border-white/10', 'bg-white/5', 'text-gray-400');
+      });
+      toggle.classList.add('border-brand-red', 'bg-brand-red/10', 'text-white');
+      toggle.classList.remove('border-white/10', 'bg-white/5', 'text-gray-400');
+
+      // إظهار البطاقات المناسبة
+      cards.forEach((card) => {
+        if (card.dataset.server === targetServer) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>

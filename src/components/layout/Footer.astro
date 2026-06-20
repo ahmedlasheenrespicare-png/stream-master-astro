@@ -1,0 +1,161 @@
+---
+/**
+ * Footer - تذييل الموقع
+ * يحتوي على: روابط المتجر، المساعدة، القانونية، معلومات التواصل، إخلاء المسؤولية
+ */
+
+import { SITE, FOOTER_LINKS } from '../../consts';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="relative z-10 mt-20 border-t border-white/5 bg-brand-bg-soft">
+  <div class="container-app section">
+    <div class="grid gap-12 lg:grid-cols-4">
+      {/* العمود الأول - الشعار والوصف */}
+      <div class="lg:col-span-1">
+        <a href="/" class="mb-4 flex items-center gap-3">
+          <div
+            class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-red to-red-700 shadow-lg shadow-red-500/30"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="white"
+              class="h-7 w-7"
+            >
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-lg font-black text-white">{SITE.name}</span>
+            <span class="text-xs text-gray-400">{SITE.nameEn}</span>
+          </div>
+        </a>
+        <p class="mb-6 text-sm leading-relaxed text-gray-400">
+          {SITE.description}
+        </p>
+
+        {/* أيقونات التواصل الاجتماعي */}
+        <div class="flex gap-2">
+          {
+            Object.entries(SITE.social).map(([platform, url]) => (
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener"
+                aria-label={platform}
+                class="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-gray-400 transition-all hover:border-brand-red/50 hover:bg-brand-red/10 hover:text-brand-red-light"
+              >
+                <span class="text-xs font-black uppercase">
+                  {platform.charAt(0)}
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      {/* العمود الثاني - المتجر */}
+      <div>
+        <h3 class="mb-4 text-sm font-black text-white">المتجر</h3>
+        <ul class="space-y-3">
+          {
+            FOOTER_LINKS.shop.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-sm text-gray-400 transition-colors hover:text-white"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      {/* العمود الثالث - المساعدة */}
+      <div>
+        <h3 class="mb-4 text-sm font-black text-white">المساعدة</h3>
+        <ul class="space-y-3">
+          {
+            FOOTER_LINKS.help.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-sm text-gray-400 transition-colors hover:text-white"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      {/* العمود الرابع - القانونية والتواصل */}
+      <div>
+        <h3 class="mb-4 text-sm font-black text-white">قانوني</h3>
+        <ul class="space-y-3">
+          {
+            FOOTER_LINKS.legal.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="text-sm text-gray-400 transition-colors hover:text-white"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="mt-6 space-y-2">
+          <a
+            href={`mailto:${SITE.email}`}
+            class="flex items-center gap-2 text-sm text-gray-400 transition-colors hover:text-white"
+          >
+            <span>📧</span>
+            <span dir="ltr">{SITE.email}</span>
+          </a>
+          <a
+            href={`https://wa.me/${SITE.whatsapp.replace('+', '')}`}
+            target="_blank"
+            rel="noopener"
+            class="flex items-center gap-2 text-sm text-gray-400 transition-colors hover:text-green-400"
+          >
+            <span>💬</span>
+            <span dir="ltr">{SITE.whatsapp}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    {/* إخلاء مسؤولية */}
+    <div
+      class="mt-12 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4 text-xs leading-relaxed text-amber-200/80"
+    >
+      <strong class="block text-amber-300">⚠️ إخلاء مسؤولية:</strong>
+      الخدمة تعتمد على محتوى أطراف ثالثة ومحتوى مرخّص. المشترك هو المسؤول الوحيد عن
+      المحتوى الذي يختار مشاهدته والامتثال لقوانين بلده. الموقع لا يوفّر ولا يشجّع على
+      بث محتوى مقرصن.
+    </div>
+
+    {/* شريط حقوق */}
+    <div
+      class="mt-8 flex flex-col items-center justify-between gap-4 border-t border-white/5 pt-8 text-xs text-gray-500 sm:flex-row"
+    >
+      <p>
+        © {year}
+        {SITE.name}. جميع الحقوق محفوظة.
+      </p>
+      <p class="flex items-center gap-2">
+        <span>صُنع بـ</span>
+        <span class="text-brand-red">❤️</span>
+        <span>في السعودية</span>
+      </p>
+    </div>
+  </div>
+</footer>

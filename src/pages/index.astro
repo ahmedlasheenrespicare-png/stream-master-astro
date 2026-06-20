@@ -1,0 +1,23 @@
+---
+/**
+ * الصفحة الرئيسية
+ * تستورد الأقسام المطلوبة فقط (Code Splitting تلقائي من Astro)
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Hero from '@sections/Hero.astro';
+import Servers from '@sections/Servers.astro';
+import Pricing from '@sections/Pricing.astro';
+import BlogPreview from '@sections/BlogPreview.astro';
+import FAQ from '@sections/FAQ.astro';
+import CTA from '@sections/CTA.astro';
+---
+
+<BaseLayout>
+  <Hero />
+  <Servers />
+  <Pricing />
+  <BlogPreview />
+  <FAQ />
+  <CTA />
+</BaseLayout>

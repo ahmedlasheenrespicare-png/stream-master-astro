@@ -1,0 +1,40 @@
+---
+/**
+ * صفحة من نحن
+ * تستخدم Content Collection لقراءة المحتوى من Markdown
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getEntry } from 'astro:content';
+
+const entry = await getEntry('pages', 'about');
+const { Content } = await entry?.render() ?? { Content: null };
+
+const ogImage = '/images/og-default.png';
+---
+
+<BaseLayout
+  title={entry?.data.title ?? 'من نحن'}
+  description={entry?.data.description}
+  ogImage={ogImage}
+>
+  <section class="section pt-16">
+    <div class="container-app max-w-3xl">
+      <header class="mb-10 text-center">
+        <span class="badge mb-3">من نحن</span>
+        <h1 class="mb-4 text-4xl font-black tracking-tight text-white sm:text-5xl">
+          {entry?.data.title}
+        </h1>
+        <p class="text-base text-gray-400 sm:text-lg">
+          {entry?.data.description}
+        </p>
+      </header>
+
+      <article
+        class="prose prose-invert max-w-none prose-headings:font-black prose-headings:text-white prose-p:text-gray-300 prose-strong:text-white"
+      >
+        {Content && <Content />}
+      </article>
+    </div>
+  </section>
+</BaseLayout>

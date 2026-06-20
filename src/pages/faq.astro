@@ -1,0 +1,124 @@
+---
+/**
+ * صفحة الأسئلة الشائعة الكاملة
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import FAQ from '@sections/FAQ.astro';
+import { SITE } from '../consts';
+
+const allFaqs = [
+  // نفس الأسئلة من قسم FAQ في الصفحة الرئيسية، بالإضافة لأسئلة أكثر
+  {
+    question: 'كيف يعمل IPTV؟',
+    answer: 'IPTV (Internet Protocol Television) يبث القنوات التلفزيونية عبر الإنترنت بدلاً من الأقمار الصناعية. ببساطة، تستقبل القنوات عبر اتصالك بالإنترنت بدلًا من صحن الاستقبال. كل ما تحتاجه: اتصال إنترنت مستقر وجهاز متوافق (تلفاز ذكي، Fire Stick، Apple TV، إلخ).',
+  },
+  {
+    question: 'ما الفرق بين IPTV و Netflix و Shahid؟',
+    answer: 'Netflix و Shahid هما منصات VOD (حسب الطلب) - تدفع لمشاهدة محتوى محدد متى شئت. IPTV يقدم: 1) قنوات تلفزيونية حية (مثل beIN، SSC، MBC). 2) مكتبة VOD ضخمة. 3) بث مباشر للمباريات والفعاليات. 4) محتوى من جميع أنحاء العالم.',
+  },
+  {
+    question: 'هل الخدمة قانونية؟',
+    answer: 'نعم، الخدمة قانونية ومتوافقة مع أنظمة الاتصالات. أنت تشترك في خدمة بث، مثل أي خدمة بث أخرى. القرار في اختيار المحتوى الذي تشاهده هو قرارك الشخصي ومسؤوليتك، ونحن لا نوفّر ولا نشجّع على أي محتوى مقرصن.',
+  },
+  {
+    question: 'هل يمكنني استخدام الاشتراك خارج السعودية؟',
+    answer: 'نعم! الخدمة تعمل في أي مكان في العالم. فقط تأكد من أن لديك اتصال إنترنت مستقر. كثير من المغتربين السعوديين يستخدمون الخدمة لمتابعة القنوات السعودية.',
+  },
+  {
+    question: 'كيف أقوم بالتثبيت على تلفازي؟',
+    answer: 'بعد الاشتراك، نرسل لك دليل تثبيت مفصّل حسب جهازك. الخطوات العامة: 1) حمّل تطبيق IPTV Smarters أو TiviMate أو IBO Player. 2) أدخل بيانات الكود التي أرسلناها. 3) استمتع بالمشاهدة! فيديوهات التثبيت متاحة على قناة YouTube الخاصة بنا.',
+  },
+  {
+    question: 'ماذا أفعل إذا نسيت كلمة المرور؟',
+    answer: 'تواصل معنا عبر WhatsApp وسنرسل لك البيانات فورًا. لا حاجة لتسجيلات معقدة.',
+  },
+  {
+    question: 'هل يمكنني مشاركة الاشتراك مع أصدقائي؟',
+    answer: 'الاشتراك مخصص للاستخدام الشخصي والعائلي فقط. المشاركة مع أطراف خارجية تنتهك شروط الاستخدام وتعرّض اشتراكك للإلغاء.',
+  },
+  {
+    question: 'هل يختلف المحتوى حسب السيرفر؟',
+    answer: 'كل السيرفرات تقدم نفس القنوات والمحتوى تقريبًا. الفرق في الجودة، الثبات، وعدد الأجهزة المتزامنة. الأسعار تختلف بناءً على هذه المواصفات.',
+  },
+  {
+    question: 'هل تتوفر قنوات beIN Sports كاملة؟',
+    answer: 'نعم! جميع سيرفراتنا تتضمن قنوات beIN Sports الكاملة، بما فيها beIN Sports HD 1-12 و beIN Sports Max و beIN Sports Premium. كما تتضمن قنوات SSC Sports لمتابعة الدوري السعودي.',
+  },
+  {
+    question: 'كم قناة إجمالًا؟',
+    answer: 'أكثر من 15,000 قناة من 100 دولة. تغطية شاملة لـ: القنوات السعودية والخليجية والعربية، القنوات الرياضية الدولية، القنوات الترفيهية، قنوات الأطفال، القنوات الإخبارية والوثائقية.',
+  },
+  {
+    question: 'هل تتوفر أفلام ومسلسلات حديثة؟',
+    answer: 'نعم! مكتبة VOD تحتوي على +50,000 عنوان، يتم تحديثها يوميًا. تجد فيها أحدث أفلام هوليوود وبوليوود والعرب، بالإضافة إلى مسلسلات رمضان فور عرضها.',
+  },
+  {
+    question: 'كيف ألغي اشتراكي؟',
+    answer: 'الإلغاء سهل: فقط لا تجدّد عند انتهاء المدة. لا يوجد التزام أو رسوم إلغاء. إذا كنت في فترة الاسترداد (7 أيام)، تواصل معنا للاسترداد الكامل.',
+  },
+];
+---
+
+<BaseLayout
+  title="الأسئلة الشائعة"
+  description="إجابات شاملة على أكثر الأسئلة شيوعًا عن اشتراكات IPTV، الأسعار، التثبيت، الدعم الفني."
+>
+  <section class="section pt-16">
+    <div class="container-app">
+      <header class="mx-auto mb-12 max-w-3xl text-center">
+        <span class="badge mb-3">الأسئلة الشائعة</span>
+        <h1 class="mb-4 text-4xl font-black tracking-tight text-white sm:text-5xl">
+          الأسئلة
+          <span class="text-brand-red">الشائعة</span>
+        </h1>
+        <p class="text-base text-gray-400 sm:text-lg">
+          إجابات على أكثر الأسئلة شيوعًا. إذا لم تجد إجابة سؤالك،
+          {' '}
+          <a
+            href={`https://wa.me/${SITE.whatsapp.replace('+', '')}`}
+            class="text-brand-red-light hover:underline"
+            target="_blank"
+            rel="noopener"
+          >
+            تواصل معنا
+          </a>
+          {' '}
+          مباشرة.
+        </p>
+      </header>
+
+      <div class="mx-auto max-w-3xl space-y-3">
+        {
+          allFaqs.map((faq, index) => (
+            <details
+              class="group rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-md transition-all open:border-white/20 open:bg-white/[0.06]"
+            >
+              <summary class="flex cursor-pointer items-center justify-between gap-4 p-5 text-right font-black text-white hover:text-brand-red-light">
+                <span class="flex items-center gap-3">
+                  <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-red/20 text-sm font-black text-brand-red-light">
+                    {index + 1}
+                  </span>
+                  <span class="text-base sm:text-lg">{faq.question}</span>
+                </span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  class="h-5 w-5 shrink-0 text-gray-400 transition-transform group-open:rotate-180"
+                >
+                  <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </summary>
+              <div class="px-5 pb-5 text-sm leading-relaxed text-gray-300 sm:text-base">
+                {faq.answer}
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>

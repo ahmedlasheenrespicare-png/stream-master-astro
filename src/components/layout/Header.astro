@@ -1,0 +1,168 @@
+---
+/**
+ * Header - شريط التنقل العلوي
+ * يحتوي على: الشعار، روابط التنقل، زر CTA، قائمة الموبايل
+ */
+
+import { SITE, NAV_LINKS } from '../../consts';
+
+const currentPath = Astro.url.pathname;
+---
+
+<header
+  class="sticky top-0 z-40 border-b border-white/5 bg-brand-bg/80 backdrop-blur-xl"
+>
+  <div class="container-app flex h-20 items-center justify-between">
+    {/* الشعار */}
+    <a href="/" class="group flex items-center gap-3" aria-label={SITE.name}>
+      <div
+        class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-red to-red-700 shadow-lg shadow-red-500/30 transition-transform group-hover:scale-110"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="white"
+          class="h-6 w-6"
+        >
+          <path
+            d="M8 5v14l11-7z"
+          />
+        </svg>
+      </div>
+      <div class="hidden flex-col sm:flex">
+        <span class="text-base font-black text-white">{SITE.name}</span>
+        <span class="text-xs text-gray-400">{SITE.nameEn}</span>
+      </div>
+    </a>
+
+    {/* روابط التنقل - سطح المكتب */}
+    <nav class="hidden items-center gap-1 lg:flex" aria-label="التنقل الرئيسي">
+      {
+        NAV_LINKS.map((link) => {
+          const isActive =
+            currentPath === link.href ||
+            (link.href !== '/' && currentPath.startsWith(link.href));
+          return (
+            <a
+              href={link.href}
+              class:list={[
+                'rounded-full px-4 py-2 text-sm font-bold transition-all',
+                isActive
+                  ? 'bg-white/10 text-white'
+                  : 'text-gray-400 hover:bg-white/5 hover:text-white',
+              ]}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              {link.label}
+            </a>
+          );
+        })
+      }
+    </nav>
+
+    {/* CTA Buttons */}
+    <div class="flex items-center gap-2">
+      <a
+        href="/store/"
+        class="hidden btn-primary text-sm sm:inline-flex sm:text-base"
+      >
+        اشترك الآن
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3"
+          class="h-4 w-4"
+        >
+          <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </a>
+
+      {/* زر القائمة - الموبايل */}
+      <button
+        id="mobile-menu-toggle"
+        type="button"
+        aria-label="فتح القائمة"
+        aria-expanded="false"
+        class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 text-white transition-all hover:bg-white/10 lg:hidden"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          class="h-6 w-6"
+        >
+          <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  {/* قائمة الموبايل المنسدلة */}
+  <div
+    id="mobile-menu"
+    class="hidden border-t border-white/5 bg-brand-bg/95 backdrop-blur-xl lg:hidden"
+  >
+    <nav class="container-app flex flex-col gap-1 py-4" aria-label="التنقل للجوال">
+      {
+        NAV_LINKS.map((link) => {
+          const isActive =
+            currentPath === link.href ||
+            (link.href !== '/' && currentPath.startsWith(link.href));
+          return (
+            <a
+              href={link.href}
+              class:list={[
+                'rounded-xl px-4 py-3 text-base font-bold transition-all',
+                isActive
+                  ? 'bg-brand-red/10 text-brand-red-light'
+                  : 'text-gray-300 hover:bg-white/5 hover:text-white',
+              ]}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              {link.label}
+            </a>
+          );
+        })
+      }
+      <a href="/store/" class="btn-primary mt-2 w-full">
+        اشترك الآن
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // فتح/إغلاق قائمة الموبايل
+  const toggle = document.getElementById('mobile-menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+
+  toggle?.addEventListener('click', () => {
+    const isOpen = !menu?.classList.contains('hidden');
+    menu?.classList.toggle('hidden');
+    toggle.setAttribute('aria-expanded', String(!isOpen));
+    toggle.setAttribute(
+      'aria-label',
+      isOpen ? 'فتح القائمة' : 'إغلاق القائمة'
+    );
+  });
+
+  // إغلاق القائمة عند النقر على رابط
+  menu?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      menu.classList.add('hidden');
+      toggle?.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // إغلاق عند الضغط على Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu?.classList.contains('hidden')) {
+      menu.classList.add('hidden');
+      toggle?.setAttribute('aria-expanded', 'false');
+    }
+  });
+</script>

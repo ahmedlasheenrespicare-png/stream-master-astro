@@ -1,0 +1,76 @@
+# =============================================================================
+# GitHub Actions: نشر تلقائي لـ Hostinger
+# =============================================================================
+# عند رفع أي تعديل على main، يبني الموقع ويرفعه تلقائيًا عبر FTP.
+#
+# الإعداد:
+# 1. اذهب إلى GitHub repo → Settings → Secrets and variables → Actions
+# 2. أضف 4 secrets:
+#    - HOSTINGER_HOST: عنوان FTP (مثل: ftp.streammasterstore.com)
+#    - HOSTINGER_USER: اسم مستخدم FTP
+#    - HOSTINGER_PASSWORD: كلمة مرور FTP
+#    - HOSTINGER_PATH: مسار الرفع (مثل: /public_html/)
+# 3. ارفع الكود على GitHub
+# 4. كل تعديل سيُنشر تلقائيًا خلال 2-3 دقائق
+# =============================================================================
+
+name: 🚀 Deploy to Hostinger
+
+on:
+  # عند رفع تعديل على main
+  push:
+    branches: [main]
+  # يدويًا من GitHub UI
+  workflow_dispatch:
+
+# يمنع تشغيل workflows متزامنة
+concurrency:
+  group: 'production-deploy'
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. تحميل الكود
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      # 2. تثبيت Node.js
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # 3. تثبيت الاعتماديات
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      # 4. بناء الموقع
+      - name: 🔨 Build Astro site
+        run: npm run build
+
+      # 5. رفع إلى Hostinger عبر FTP
+      - name: 📤 Upload to Hostinger via FTP
+        uses: SamKirkland/ftp-action@v4
+        with:
+          ftp_host: ${{ secrets.HOSTINGER_HOST }}
+          ftp_username: ${{ secrets.HOSTINGER_USER }}
+          ftp_password: ${{ secrets.HOSTINGER_PASSWORD }}
+          local_dir: dist/
+          remote_dir: ${{ secrets.HOSTINGER_PATH }}
+          # حذف الملفات القديمة في public_html أولاً
+          # (تعليق: قد يكون خطيرًا إذا كان هناك ملفات أخرى تريد الاحتفاظ بها)
+          # delete: true
+
+      # 6. إشعار بنجاح النشر
+      - name: ✅ Deployment complete
+        if: success()
+        run: |
+          echo "🎉 تم النشر بنجاح!"
+          echo "🌐 تحقق من: https://streammasterstore.com"
+          echo ""
+          echo "⏱️ قد يستغرق ظهور التغييرات بضع دقائق بسبب CDN cache."

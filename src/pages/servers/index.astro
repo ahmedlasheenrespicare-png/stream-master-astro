@@ -1,0 +1,30 @@
+---
+/**
+ * صفحة فهرس السيرفرات
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Servers from '@sections/Servers.astro';
+import CTA from '@sections/CTA.astro';
+---
+
+<BaseLayout
+  title="السيرفرات - اختر سيرفر IPTV المثالي"
+  description="خمسة سيرفرات IPTV بمواصفات مختلفة: فالكون وشارك وهالك وأرونيوم وآي ستار. اختر ما يناسب احتياجاتك."
+>
+  <section class="section pt-16">
+    <div class="container-app text-center">
+      <span class="badge mb-3">السيرفرات</span>
+      <h1 class="mb-4 text-4xl font-black tracking-tight text-white sm:text-5xl">
+        خمسة سيرفرات،<br />لكلٍّ منها مميزاته
+      </h1>
+      <p class="mx-auto max-w-2xl text-base text-gray-400 sm:text-lg">
+        اختر السيرفر المناسب لجهازك وميزانيتك واحتياجاتك.
+        كل سيرفر يأتي مع نفس مستوى الدعم الفني المتميز.
+      </p>
+    </div>
+  </section>
+
+  <Servers />
+  <CTA />
+</BaseLayout>

@@ -1,0 +1,111 @@
+---
+/**
+ * FAQ Section - الأسئلة الشائعة
+ * يولّد Schema.org FAQPage تلقائيًا لتحسين SEO
+ */
+
+import { faqSchema } from '../../lib/seo';
+
+const faqs = [
+  {
+    question: 'ما هو IPTV وكيف يختلف عن beIN و OSN؟',
+    answer: 'IPTV (Internet Protocol Television) هو بث القنوات التلفزيونية عبر الإنترنت. يختلف عن beIN و OSN بأنه يقدم قنوات من جميع أنحاء العالم (أكثر من 15,000 قناة) بسعر أرخص بكثير، مع مكتبة ضخمة من الأفلام والمسلسلات. الخدمة تعمل على جميع أجهزتك (تلفاز، جوال، تابلت).',
+  },
+  {
+    question: 'هل الاشتراك آمن للاستخدام في السعودية؟',
+    answer: 'نعم، الخدمة آمنة تمامًا. نستخدم بروتوكولات تشفير قوية لحماية بياناتك، ولا نحتفظ بمعلومات شخصية أكثر مما يلزم. الاشتراك شخصي تمامًا، ويحق لك استخدامه في خصوصية منزلك.',
+  },
+  {
+    question: 'كم جهازًا يمكنني استخدامه في نفس الوقت؟',
+    answer: 'حسب السيرفر: سيرفر فالكون يدعم 3 أجهزة، سيرفرات شارك وهالك وآي ستار تدعم جهازين، سيرفر أرونيوم يدعم جهاز واحد. يمكنك اختيار السيرفر المناسب لاحتياجات عائلتك.',
+  },
+  {
+    question: 'ما هي سرعة الإنترنت المطلوبة؟',
+    answer: 'HD: 10 Mbps على الأقل. Full HD: 20 Mbps. 4K: 50 Mbps. إذا كنت تشاهد على أكثر من جهاز في نفس الوقت، تحتاج ضعف السرعة تقريبًا.',
+  },
+  {
+    question: 'هل يدعم التطبيق Samsung Smart TV و LG؟',
+    answer: 'نعم! نوفر تطبيقات جاهزة لـ Samsung Tizen و LG WebOS و Android TV و Apple TV و Fire TV Stick و MAG box. كما يعمل على iPhone و Android عبر تطبيقات مثل IPTV Smarters و TiviMate.',
+  },
+  {
+    question: 'كم يستغرق التفعيل بعد الدفع؟',
+    answer: 'التفعيل فوري! بمجرد تأكيد الدفع (خلال دقائق في حالة التحويل البنكي الفوري، أو فورًا مع STC Pay)، يصلك كود التفعيل عبر WhatsApp مع تعليمات التثبيت الكاملة.',
+  },
+  {
+    question: 'هل يمكنني تجربة الخدمة قبل الاشتراك؟',
+    answer: 'نعم! نوفر تجربة مجانية لمدة 24 ساعة لجميع السيرفرات. تواصل معنا عبر WhatsApp وسنرسل لك بيانات التجربة فورًا. كما أن باقة الشهر الواحد تأتي مع ضمان استرداد كامل خلال 7 أيام.',
+  },
+  {
+    question: 'ماذا يحدث إذا انتهى الاشتراك؟',
+    answer: 'لا يتم التجديد التلقائي. قبل انتهاء اشتراكك بأسبوع، نرسل لك تذكيرًا. إذا لم تُجدّد، تتوقف الخدمة بنهاية المدة المدفوعة. يمكنك إعادة التفعيل في أي وقت لاحقًا بنفس الكود أو كود جديد.',
+  },
+  {
+    question: 'هل يوجد دعم فني بالعربية؟',
+    answer: 'نعم! فريق الدعم متخصص ويجيب بالعربية والإنجليزية على مدار 24 ساعة. متوسط زمن الرد 8 دقائق عبر WhatsApp. نقدم مساعدة كاملة في التثبيت وحل أي مشكلة فنية.',
+  },
+];
+
+const faqSchemaJson = JSON.stringify(faqSchema(faqs));
+---
+
+<section class="section relative" aria-labelledby="faq-heading">
+  <div class="container-app">
+    <div class="mb-12 text-center">
+      <span class="badge mb-3">الأسئلة الشائعة</span>
+      <h2 id="faq-heading" class="section-title">
+        الأسئلة الشائعة -
+        <span class="text-brand-red">ستريم ماستر</span>
+      </h2>
+      <p class="section-subtitle">
+        كل ما تود معرفته عن اشتراكاتنا، الأسعار، الدعم الفني، وسياسة الاسترداد.
+      </p>
+    </div>
+
+    <div class="mx-auto max-w-3xl">
+      <div class="space-y-3">
+        {
+          faqs.map((faq, index) => (
+            <details
+              class="group rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-md transition-all open:border-white/20 open:bg-white/[0.06]"
+            >
+              <summary class="flex cursor-pointer items-center justify-between gap-4 p-5 text-right font-black text-white transition-colors hover:text-brand-red-light">
+                <span class="flex items-center gap-3">
+                  <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-red/20 text-sm font-black text-brand-red-light">
+                    {index + 1}
+                  </span>
+                  <span class="text-base sm:text-lg">{faq.question}</span>
+                </span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  class="h-5 w-5 shrink-0 text-gray-400 transition-transform group-open:rotate-180"
+                >
+                  <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </summary>
+              <div class="px-5 pb-5 text-sm leading-relaxed text-gray-300 sm:text-base">
+                {faq.answer}
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="mt-10 text-center">
+      <p class="mb-4 text-gray-400">لم تجد إجابة سؤالك؟</p>
+      <a
+        href="/faq/"
+        class="btn-secondary"
+      >
+        <span>صفحة الأسئلة الشائعة الكاملة</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+{/* Schema.org FAQPage - يحسّن ظهور صفحاتك في Google */}
+<script type="application/ld+json" set:html={faqSchemaJson} />

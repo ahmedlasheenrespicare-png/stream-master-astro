@@ -1,0 +1,46 @@
+---
+/**
+ * صفحة المتجر - كل الباقات في مكان واحد
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Pricing from '@sections/Pricing.astro';
+import CTA from '@sections/CTA.astro';
+import { DEFAULT_SEO, SITE } from '../../consts';
+
+const ogImage = '/images/store-og.png';
+---
+
+<BaseLayout
+  title="متجر اشتراكات IPTV - أسعار فالكون وشارك وهالك"
+  description="تصفح جميع باقات اشتراك IPTV في ستريم ماستر برو. سيرفرات فالكون وشارك وهالك وأرونيوم وآي ستار بأسعار تنافسية وضمان 7 أيام."
+  ogImage={ogImage}
+>
+  <section class="section pt-16">
+    <div class="container-app text-center">
+      <span class="badge mb-3">المتجر</span>
+      <h1 class="mb-4 text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
+        متجر
+        <span class="text-brand-red">اشتراكات IPTV</span>
+      </h1>
+      <p class="mx-auto max-w-2xl text-base text-gray-400 sm:text-lg">
+        خمس سيرفرات مختلفة، أربع خطط لكل سيرفر. اختر ما يناسبك من بين
+        {' '}
+        <strong class="text-white">+20</strong>
+        {' '}
+        خيار متاح.
+      </p>
+
+      {/* ضمانات سريعة */}
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4 text-sm">
+        <div class="badge">✅ ضمان 7 أيام</div>
+        <div class="badge bg-green-500/10 text-green-400">⚡ تفعيل فوري</div>
+        <div class="badge bg-blue-500/10 text-blue-400">🔒 دفع آمن</div>
+        <div class="badge bg-purple-500/10 text-purple-400">💬 دعم 24/7</div>
+      </div>
+    </div>
+  </section>
+
+  <Pricing />
+  <CTA />
+</BaseLayout>

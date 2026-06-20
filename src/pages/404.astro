@@ -1,0 +1,41 @@
+---
+/**
+ * صفحة 404 - صفحة غير موجودة
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="404 - الصفحة غير موجودة"
+  description="الصفحة التي تبحث عنها غير موجودة."
+  noindex={true}
+>
+  <section class="section pt-16">
+    <div class="container-app text-center">
+      <div class="mb-8 inline-block">
+        <span class="text-9xl">⚽</span>
+      </div>
+
+      <h1 class="mb-4 text-6xl font-black tracking-tight text-white sm:text-8xl">
+        <span class="text-brand-red">404</span>
+      </h1>
+
+      <p class="mb-2 text-2xl font-black text-white sm:text-3xl">
+        الصفحة غير موجودة
+      </p>
+      <p class="mx-auto mb-10 max-w-xl text-base text-gray-400 sm:text-lg">
+        الصفحة التي تبحث عنها قد تكون قد نُقلت أو حُذفت. دعنا نُعيدك إلى المسار الصحيح.
+      </p>
+
+      <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <a href="/" class="btn-primary">
+          🏠 العودة للرئيسية
+        </a>
+        <a href="/store/" class="btn-secondary">
+          🛒 تصفح المتجر
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

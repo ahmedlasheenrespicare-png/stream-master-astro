@@ -1,0 +1,116 @@
+---
+/**
+ * BlogPreview Section - عرض آخر 3 مقالات من المدوّنة
+ * يستخدم Astro Content Collections لجلب المقالات تلقائيًا
+ */
+
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+const featured = posts
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
+  .slice(0, 3);
+
+// تنسيق التاريخ بالعربية
+const dateFormatter = new Intl.DateTimeFormat('ar-SA', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<section class="section relative" aria-labelledby="blog-preview-heading">
+  <div class="container-app">
+    <div class="mb-12 flex flex-wrap items-end justify-between gap-4 text-center sm:text-right">
+      <div>
+        <span class="badge mb-3">المدوّنة</span>
+        <h2 id="blog-preview-heading" class="section-title mb-3">
+          مقالات
+          <span class="text-brand-red">IPTV</span>
+          ودليل المشاهدة
+        </h2>
+        <p class="mx-auto max-w-2xl text-base text-gray-400 sm:text-lg sm:mx-0">
+          دليلك المتخصص لاختيار أفضل اشتراك IPTV، تثبيت التطبيقات، ومتابعة البطولات العالمية.
+        </p>
+      </div>
+      <a
+        href="/blog/"
+        class="hidden btn-secondary sm:inline-flex"
+        aria-label="عرض جميع المقالات"
+      >
+        <span>كل المقالات</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3"
+          class="h-4 w-4 rotate-180"
+        >
+          <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </a>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-3">
+      {
+        featured.map((post) => (
+          <article class="card group overflow-hidden p-0">
+            <a href={`/blog/${post.slug}/`} class="block">
+              {/* صورة المقال */}
+              {post.data.image && (
+                <div class="relative aspect-video-16-9 overflow-hidden bg-brand-bg-soft">
+                  <img
+                    src={post.data.image}
+                    alt={post.data.imageAlt ?? post.data.title}
+                    loading="lazy"
+                    decoding="async"
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  {post.data.category && (
+                    <span class="absolute right-3 top-3 rounded-full bg-brand-red/90 px-3 py-1 text-xs font-black text-white">
+                      {post.data.category}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              <div class="p-6">
+                <div class="mb-3 flex items-center gap-3 text-xs text-gray-500">
+                  <time datetime={post.data.publishedAt.toISOString()}>
+                    📅 {dateFormatter.format(post.data.publishedAt)}
+                  </time>
+                  {post.data.readingTime && (
+                    <span>⏱️ {post.data.readingTime} دقيقة</span>
+                  )}
+                </div>
+
+                <h3 class="mb-3 line-clamp-2 text-xl font-black leading-tight text-white transition-colors group-hover:text-brand-red-light">
+                  {post.data.title}
+                </h3>
+
+                <p class="mb-4 line-clamp-3 text-sm leading-relaxed text-gray-400">
+                  {post.data.excerpt}
+                </p>
+
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-gray-500">{post.data.author}</span>
+                  <span class="font-black text-brand-red-light transition-transform group-hover:translate-x-[-4px]">
+                    اقرأ المزيد ←
+                  </span>
+                </div>
+              </div>
+            </a>
+          </article>
+        ))
+      }
+    </div>
+
+    <div class="mt-10 text-center sm:hidden">
+      <a href="/blog/" class="btn-secondary">
+        كل المقالات
+      </a>
+    </div>
+  </div>
+</section>

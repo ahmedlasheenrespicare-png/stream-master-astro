@@ -1,0 +1,160 @@
+---
+/**
+ * صفحة كأس العالم 2026 الخاصة
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { SITE } from '../consts';
+
+const features = [
+  {
+    icon: '🏆',
+    title: 'جميع مباريات كأس العالم',
+    description: '104 مباراة من 48 منتخبًا، من مرحلة المجموعات حتى النهائي.',
+  },
+  {
+    icon: '📺',
+    title: 'قنوات beIN Sports Max كاملة',
+    description: 'كل قنوات beIN Sports Max و Sports Premium و Sports HD.',
+  },
+  {
+    icon: '🇸🇦',
+    title: 'قنوات SSC Sports',
+    description: 'جميع قنوات SSC لمتابعة الدوري السعودي وبطولات أخرى.',
+  },
+  {
+    icon: '🔄',
+    title: 'إعادة فورية للمباريات',
+    description: 'شاهد أي مباراة فاتها في أي وقت خلال 7 أيام.',
+  },
+  {
+    icon: '💬',
+    title: 'تعليق بلغات متعددة',
+    description: 'عربي، إنجليزي، فرنسي، إسباني - اختر ما يناسبك.',
+  },
+  {
+    icon: '⚡',
+    title: 'بث بدون تقطيع',
+    description: 'سيرفرات مخصصة للبطولة تتحمّل ضغط آلاف المتابعين.',
+  },
+];
+
+const schedule = [
+  { date: '11 يونيو', match: 'المباراة الافتتاحية', group: 'المجموعة A' },
+  { date: '15 يونيو', match: 'السعودية vs إسبانيا', group: 'دور المجموعات' },
+  { date: '20 يونيو', match: 'قطر vs كندا', group: 'دور المجموعات' },
+  { date: '25 يونيو', match: 'ربع النهائي', group: 'الأدوار الإقصائية' },
+  { date: '9 يوليو', match: 'نصف النهائي', group: 'الأدوار الإقصائية' },
+  { date: '19 يوليو', match: 'النهائي الكبير', group: 'النهائي' },
+];
+---
+
+<BaseLayout
+  title="كأس العالم FIFA 2026™ - تابع كل المباريات"
+  description="باقات خاصة لمتابعة كأس العالم 2026: جميع قنوات beIN Sports Max و SSC Sports. إعادة فورية وبث بدون تقطيع."
+  ogImage="/images/hero-world-cup-stream-master.avif"
+>
+  {/* Hero خاص بكأس العالم */}
+  <section class="relative overflow-hidden pt-12 sm:pt-16">
+    <div
+      aria-hidden="true"
+      class="absolute inset-0 -z-10 bg-gradient-to-br from-amber-500/20 via-brand-bg to-green-900/20"
+    >
+    </div>
+    <div
+      aria-hidden="true"
+      class="absolute right-0 top-0 -z-10 h-[500px] w-[500px] rounded-full bg-amber-500/20 blur-[120px]"
+    >
+    </div>
+
+    <div class="container-app text-center">
+      <span class="badge-amber mb-4">🏆 الحدث الأبرز في 2026</span>
+
+      <h1 class="mb-6 text-fluid-h1 font-black leading-[1.05] tracking-tight text-white">
+        <span class="block">كأس العالم</span>
+        <span class="block bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 bg-clip-text text-transparent">
+          FIFA 2026™
+        </span>
+      </h1>
+
+      <p class="mx-auto mb-10 max-w-3xl text-base leading-relaxed text-gray-300 sm:text-xl">
+        أكبر كأس عالم في التاريخ — 48 منتخبًا، 104 مباراة، في ثلاث دول.
+        تابع كل لحظة مع
+        <strong class="text-amber-300"> ستريم ماستر برو</strong>.
+      </p>
+
+      <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <a href="/store/" class="btn-primary text-base sm:text-lg">
+          <span>اشترك لباقة كأس العالم</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="h-5 w-5"
+          >
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </a>
+        <a
+          href={`https://wa.me/${SITE.whatsapp.replace('+', '')}?text=${encodeURIComponent('مرحبًا، أرغب في معرفة تفاصيل باقة كأس العالم 2026')}`}
+          target="_blank"
+          rel="noopener"
+          class="btn-secondary"
+        >
+          💬 استفسر
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {/* مميزات الباقة */}
+  <section class="section">
+    <div class="container-app">
+      <div class="mb-10 text-center">
+        <h2 class="section-title">ماذا تتضمن باقة كأس العالم؟</h2>
+        <p class="section-subtitle">
+          باقة شاملة تضمن لك متابعة كل لحظة من البطولة بأفضل جودة ممكنة.
+        </p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {
+          features.map((feature) => (
+            <article class="card">
+              <div class="mb-4 text-4xl">{feature.icon}</div>
+              <h3 class="mb-2 text-xl font-black text-white">{feature.title}</h3>
+              <p class="text-sm text-gray-400">{feature.description}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* جدول المباريات */}
+  <section class="section">
+    <div class="container-app">
+      <div class="mb-10 text-center">
+        <h2 class="section-title">أهم المواعيد</h2>
+        <p class="section-subtitle">أبرز مباريات كأس العالم 2026</p>
+      </div>
+
+      <div class="mx-auto max-w-3xl space-y-3">
+        {
+          schedule.map((game) => (
+            <div class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition-all hover:border-amber-500/30">
+              <div>
+                <h3 class="font-black text-white">{game.match}</h3>
+                <p class="text-xs text-gray-400">{game.group}</p>
+              </div>
+              <div class="text-left">
+                <p class="text-sm font-black text-amber-300">{game.date}</p>
+                <p class="text-xs text-gray-500">2026</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>

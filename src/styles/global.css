@@ -1,0 +1,333 @@
+/**
+ * ملف الأنماط العام - يُستورد مرة واحدة في BaseLayout
+ * يحتوي على: متغيرات CSS، أنماط مخصصة، تحسينات للعربية، والأنميشن
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+ * 1. CSS Variables (متغيرات التصميم)
+ * ============================================================================ */
+@layer base {
+  :root {
+    --color-bg: #1a1233;
+    --color-bg-soft: #0d0d0d;
+    --color-red: #dc2626;
+    --color-red-light: #ef4444;
+    --color-amber: #f59e0b;
+    --color-amber-light: #fbbf24;
+    --color-text: #e5e7eb;
+    --color-text-muted: #9ca3af;
+    --header-height: 80px;
+    --container-padding: 1.5rem;
+  }
+}
+
+/* ============================================================================
+ * 2. تخصيصات النص العربي
+ * ============================================================================ */
+@layer base {
+  html {
+    font-family:
+      'Tajawal', 'Cairo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    font-feature-settings: 'kern', 'liga';
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  /* الأرقام في النسق اللاتيني تبقى أوضح عند عرض الأسعار */
+  .num-latin {
+    font-feature-settings: 'tnum';
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  /* تحسين المسافات بين الكلمات العربية */
+  body {
+    line-height: 1.7;
+    word-spacing: 0.05em;
+  }
+
+  /* إزالة زخرفة الـ Heading الافتراضية في المتصفح */
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.02em;
+  }
+}
+
+/* ============================================================================
+ * 3. مكوّنات مخصصة قابلة لإعادة الاستخدام
+ * ============================================================================ */
+@layer components {
+  /* الزر الرئيسي - CTA */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand-red px-6 py-3 font-black text-white shadow-lg shadow-red-500/30 transition-all hover:bg-red-700 hover:shadow-xl hover:shadow-red-500/40 active:scale-95 sm:px-8 sm:py-4;
+  }
+
+  /* الزر الثانوي */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/20 bg-white/5 px-6 py-3 font-black text-white backdrop-blur-md transition-all hover:border-white/40 hover:bg-white/10 active:scale-95 sm:px-8 sm:py-4;
+  }
+
+  /* بطاقة عادية */
+  .card {
+    @apply rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-md transition-all hover:border-white/20 hover:bg-white/[0.06];
+  }
+
+  /* بطاقة بأسعار */
+  .price-card {
+    @apply card relative overflow-hidden;
+  }
+
+  .price-card[data-popular='true'] {
+    @apply border-brand-red/50 bg-gradient-to-br from-red-950/30 via-brand-bg/50 to-brand-bg;
+  }
+
+  /* خلفية شبكة من النقاط - لتأثير بصري خفيف */
+  .bg-dot-grid {
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* تأثير الـ Glass morphism */
+  .glass {
+    @apply border border-white/10 bg-white/5 backdrop-blur-xl;
+  }
+
+  /* شارة */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full bg-brand-red/10 px-3 py-1 text-xs font-black text-brand-red-light;
+  }
+
+  .badge-amber {
+    @apply inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-3 py-1 text-xs font-black text-amber-400;
+  }
+
+  /* Container مخصص مع padding متجاوب */
+  .container-app {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Section مع تباعد رأسي موحد */
+  .section {
+    @apply py-16 sm:py-20 lg:py-24;
+  }
+
+  /* عنوان قسم */
+  .section-title {
+    @apply mb-3 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl;
+  }
+
+  /* وصف قسم */
+  .section-subtitle {
+    @apply mx-auto mb-10 max-w-3xl text-base text-gray-400 sm:text-lg;
+  }
+}
+
+/* ============================================================================
+ * 4. Hero Swiper (سوايدر الصفحة الرئيسية)
+ * ============================================================================ */
+.hero-swiper-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+}
+
+.hero-swiper-track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.hero-swiper-slide {
+  flex-shrink: 0;
+  width: 100%;
+  user-select: none;
+}
+
+.hero-swiper-dots {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 20;
+}
+
+.hero-swiper-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.hero-swiper-dot[aria-current='true'] {
+  background-color: #dc2626;
+  width: 24px;
+  border-radius: 4px;
+}
+
+.hero-swiper-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 20;
+}
+
+.hero-swiper-card:hover .hero-swiper-nav,
+.hero-swiper-card.is-interacting .hero-swiper-nav {
+  opacity: 1;
+}
+
+.hero-swiper-prev {
+  right: 16px;
+}
+
+.hero-swiper-next {
+  left: 16px;
+}
+
+/* ============================================================================
+ * 5. تحسينات الأداء
+ * ============================================================================ */
+
+/* صور responsive افتراضية */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Lazy-loaded images تظهر تدريجياً */
+img[loading='lazy'] {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+img[loading='lazy'].loaded,
+img[loading='lazy'][data-loaded='true'] {
+  opacity: 1;
+}
+
+/* ضمان عدم اهتزاز الـ CLS للعناصر المحجوزة */
+.aspect-video-16-9 {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-card-2-3 {
+  aspect-ratio: 2 / 3;
+}
+
+/* ============================================================================
+ * 6. تخصيصات التمرير (Scrollbar)
+ * ============================================================================ */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(220, 38, 38, 0.5);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) var(--color-bg);
+}
+
+/* ============================================================================
+ * 7. Animation للأرقام العائمة (Live Matches)
+ * ============================================================================ */
+@keyframes pulse-dot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+}
+
+.pulse-dot {
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+/* Live indicator */
+.live-indicator {
+  position: relative;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #dc2626;
+}
+
+.live-indicator::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background-color: #dc2626;
+  opacity: 0.4;
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+/* ============================================================================
+ * 8. Print styles (للطباعة إذا احتاج أحدهم طباعة الأسعار)
+ * ============================================================================ */
+@media print {
+  .no-print, header, footer, .btn-primary, .btn-secondary {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
+
+/* ============================================================================
+ * 9. Reduced Motion (احترام إعدادات المستخدم)
+ * ============================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

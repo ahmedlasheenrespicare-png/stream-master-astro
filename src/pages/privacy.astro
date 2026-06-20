@@ -1,0 +1,33 @@
+---
+/**
+ * صفحة سياسة الخصوصية
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getEntry } from 'astro:content';
+
+const entry = await getEntry('pages', 'privacy');
+const { Content } = await entry?.render() ?? { Content: null };
+---
+
+<BaseLayout
+  title={entry?.data.title ?? 'سياسة الخصوصية'}
+  description={entry?.data.description}
+>
+  <section class="section pt-16">
+    <div class="container-app max-w-3xl">
+      <header class="mb-10">
+        <span class="badge mb-3">قانوني</span>
+        <h1 class="mb-4 text-4xl font-black tracking-tight text-white sm:text-5xl">
+          {entry?.data.title}
+        </h1>
+      </header>
+
+      <article
+        class="prose prose-invert max-w-none prose-headings:font-black prose-headings:text-white prose-p:text-gray-300 prose-strong:text-white"
+      >
+        {Content && <Content />}
+      </article>
+    </div>
+  </section>
+</BaseLayout>

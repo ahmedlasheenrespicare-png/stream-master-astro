@@ -1,0 +1,43 @@
+# =============================================================================
+# ملف _headers لـ Cloudflare / Netlify (إذا قررت استخدام CDN أمام Hostinger)
+# =============================================================================
+
+# للأصول الثابتة المخزّنة مسبقًا (immutable hashed)
+/_assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# لملفات CSS و JS
+/*.css
+  Cache-Control: public, max-age=604800
+/*.js
+  Cache-Control: public, max-age=604800
+
+# للصور
+/*.jpg
+  Cache-Control: public, max-age=2592000
+/*.png
+  Cache-Control: public, max-age=2592000
+/*.webp
+  Cache-Control: public, max-age=2592000
+/*.avif
+  Cache-Control: public, max-age=2592000
+/*.svg
+  Cache-Control: public, max-age=2592000
+
+# لـ Service Workers
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+/OneSignalSDKWorker.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+# لـ HTML
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# رؤوس الأمان
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload

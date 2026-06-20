@@ -1,0 +1,471 @@
+---
+/**
+ * Hero Section - القسم الرئيسي في الصفحة الأولى
+ * يحتوي على: عنوان ضخم، وصف، زر CTA، سوايدر لمباريات كأس العالم
+ */
+
+import { SITE } from '../../consts';
+
+// صور المباريات (ستتم مشاركتها من المجلد الأصلي لاحقًا)
+const matches = [
+  {
+    id: 1,
+    title: 'السعودية vs إسبانيا',
+    date: '15 يونيو 2026',
+    tournament: 'كأس العالم 2026',
+    image: '/images/matches/streammaster-saudi-spain-1408x768.avif',
+    homeTeam: 'السعودية',
+    awayTeam: 'إسبانيا',
+    homeScore: '2',
+    awayScore: '1',
+    status: 'finished',
+  },
+  {
+    id: 2,
+    title: 'قطر vs كندا',
+    date: '20 يونيو 2026',
+    tournament: 'كأس العالم 2026',
+    image: '/images/matches/streammaster-qatar-canada-promo.avif',
+    homeTeam: 'قطر',
+    awayTeam: 'كندا',
+    homeScore: '0',
+    awayScore: '0',
+    status: 'live',
+  },
+  {
+    id: 3,
+    title: 'مصر vs نيوزيلندا - النهائي',
+    date: '25 يونيو 2026',
+    tournament: 'كأس العالم 2026',
+    image: '/images/matches/streammaster-egypt-newzealand-final.avif',
+    homeTeam: 'مصر',
+    awayTeam: 'نيوزيلندا',
+    homeScore: '?',
+    awayScore: '?',
+    status: 'upcoming',
+  },
+  {
+    id: 4,
+    title: 'بطولة beIN Sports Max',
+    date: 'طوال الموسم',
+    tournament: 'beIN Sports',
+    image: '/images/matches/falcon-bein-sports-max-channels.avif',
+    homeTeam: 'beIN',
+    awayTeam: 'Sports',
+    homeScore: '+',
+    awayScore: '100',
+    status: 'live',
+  },
+];
+---
+
+<section
+  id="hero"
+  class="relative overflow-hidden pt-12 sm:pt-16 lg:pt-20"
+  aria-labelledby="hero-heading"
+>
+  {/* خلفية ديكورية */}
+  <div
+    aria-hidden="true"
+    class="absolute inset-0 -z-10 bg-radial-glow"
+  >
+  </div>
+  <div
+    aria-hidden="true"
+    class="absolute right-0 top-0 -z-10 h-[500px] w-[500px] rounded-full bg-purple-600/15 blur-[120px]"
+  >
+  </div>
+  <div
+    aria-hidden="true"
+    class="absolute bottom-0 left-0 -z-10 h-[400px] w-[400px] rounded-full bg-brand-red/10 blur-[100px]"
+  >
+  </div>
+
+  <div class="container-app relative">
+    <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+      {/* النص الرئيسي */}
+      <div class="text-center lg:text-right">
+        {/* شارة صغيرة */}
+        <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-brand-red/30 bg-brand-red/10 px-4 py-2 text-xs font-black text-brand-red-light">
+          <span class="live-indicator"></span>
+          <span>كأس العالم 2026 — تابع المباريات مباشرة</span>
+        </div>
+
+        <h1
+          id="hero-heading"
+          class="mb-6 text-fluid-h1 font-black leading-[1.1] tracking-tight text-white"
+        >
+          تجربة
+          <span class="bg-gradient-to-l from-brand-red-light via-brand-red to-red-700 bg-clip-text text-transparent">
+            مشاهدة ذكية
+          </span>
+          <br />
+          تتخطى التوقعات
+        </h1>
+
+        <p
+          class="mb-10 max-w-xl text-base leading-relaxed text-gray-400 sm:text-xl"
+        >
+          لا تبحث كثيرًا — أفضل اشتراك IPTV في
+          <strong class="text-white">السعودية والخليج</strong> بنقاء 4K و8K،
+          سيرفرات مستقرة، ودعم فني يردّ في دقائق.
+        </p>
+
+        <div class="flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
+          <a href="/store/" class="btn-primary">
+            <span>اشترك الآن</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              class="h-4 w-4 rotate-180"
+            >
+              <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+          <a href="#pricing" class="btn-secondary">
+            <span>شاهد الأسعار</span>
+          </a>
+        </div>
+
+        {/* مؤشرات ثقة */}
+        <div class="mt-10 flex flex-wrap items-center justify-center gap-6 text-xs text-gray-400 lg:justify-start">
+          <div class="flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="h-5 w-5 text-amber-400"
+            >
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            <span>تقييم <strong class="text-white">4.8/5</strong></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-green-500 pulse-dot"></span>
+            <span><strong class="text-white">+50,000</strong> مشترك نشط</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-brand-red pulse-dot"></span>
+            <span>ثبات <strong class="text-white">99.9%</strong></span>
+          </div>
+        </div>
+      </div>
+
+      {/* سوايدر المباريات */}
+      <div class="relative">
+        <div class="hero-swiper-card aspect-video-16-9 border border-white/10 bg-gradient-to-br from-brand-bg-soft via-brand-bg to-brand-bg-soft shadow-2xl shadow-red-500/20">
+          <div class="hero-swiper-viewport h-full w-full overflow-hidden rounded-2xl">
+            <div class="hero-swiper-track h-full">
+              {
+                matches.map((match, index) => (
+                  <div
+                    class="hero-swiper-slide relative h-full"
+                    data-index={index}
+                  >
+                    <img
+                      src={match.image}
+                      alt={`${match.homeTeam} ضد ${match.awayTeam}`}
+                      class="absolute inset-0 h-full w-full object-cover opacity-90"
+                      loading={index === 0 ? 'eager' : 'lazy'}
+                      decoding="async"
+                      width="1408"
+                      height="768"
+                    />
+                    {/* تدرج للوضوح */}
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+
+                    {/* شارة الحالة */}
+                    <div class="absolute right-4 top-4 z-10">
+                      {match.status === 'live' && (
+                        <span class="badge bg-brand-red text-white">
+                          <span class="live-indicator bg-white" />
+                          مباشر
+                        </span>
+                      )}
+                      {match.status === 'upcoming' && (
+                        <span class="badge-amber">قريباً</span>
+                      )}
+                      {match.status === 'finished' && (
+                        <span class="badge bg-white/20 text-white">انتهت</span>
+                      )}
+                    </div>
+
+                    {/* النتيجة */}
+                    <div class="absolute inset-x-0 bottom-0 z-10 p-6">
+                      <p class="mb-1 text-xs font-bold uppercase tracking-wider text-gray-300">
+                        {match.tournament}
+                      </p>
+                      <div class="mb-2 flex items-center justify-between gap-3">
+                        <span class="text-xl font-black text-white sm:text-2xl">
+                          {match.homeTeam}
+                        </span>
+                        <span class="num-latin text-2xl font-black text-brand-red-light sm:text-3xl">
+                          {match.homeScore}
+                        </span>
+                      </div>
+                      <div class="mb-3 flex items-center justify-between gap-3">
+                        <span class="text-xl font-black text-white sm:text-2xl">
+                          {match.awayTeam}
+                        </span>
+                        <span class="num-latin text-2xl font-black text-brand-red-light sm:text-3xl">
+                          {match.awayScore}
+                        </span>
+                      </div>
+                      <p class="text-xs text-gray-300">{match.date}</p>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+
+          {/* نقاط التنقل */}
+          <div class="hero-swiper-dots" role="tablist" aria-label="اختر شريحة">
+          </div>
+
+          {/* CTA Overlay */}
+          <div
+            class="absolute inset-0 z-30 flex items-center justify-center bg-black/60 opacity-0 backdrop-blur-sm transition-opacity duration-300 [.is-interacting_&]:opacity-100"
+          >
+            <a href="/world-cup-2026/" class="btn-primary text-base">
+              شاهد كأس العالم 2026
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="h-5 w-5"
+              >
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        {/* عناصر ديكورية عائمة */}
+        <div
+          aria-hidden="true"
+          class="absolute -top-6 -right-6 z-20 rounded-3xl border border-white/10 bg-white/10 p-4 shadow-2xl backdrop-blur-xl animate-float"
+        >
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-red">
+              <span class="text-white">⚡</span>
+            </div>
+            <div>
+              <p class="text-xs text-gray-400">الاستجابة</p>
+              <p class="num-latin text-sm font-black text-white">
+                &lt; ثانية
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          aria-hidden="true"
+          class="absolute -bottom-6 -left-6 z-20 rounded-3xl border border-white/10 bg-white/10 p-4 shadow-2xl backdrop-blur-xl animate-float"
+          style="animation-delay: 1s"
+        >
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-amber-500">
+              <span class="text-white">⭐</span>
+            </div>
+            <div>
+              <p class="text-xs text-gray-400">جودة الصورة</p>
+              <p class="text-sm font-black text-white">حتى 8K</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/*
+  سكريبت السوايدر - lazy-loaded فقط عندما يكون القسم مرئيًا
+  يستخدم IntersectionObserver لتحسين الأداء
+*/}
+<script>
+  function initHeroSwiper() {
+    const viewport = document.querySelector(
+      '#hero .hero-swiper-viewport'
+    ) as HTMLElement | null;
+    if (!viewport || viewport.dataset.swiperReady === 'true') return;
+
+    const track = viewport.querySelector(
+      '.hero-swiper-track'
+    ) as HTMLElement | null;
+    if (!track) return;
+
+    const slides = Array.from(
+      track.querySelectorAll<HTMLElement>('.hero-swiper-slide')
+    );
+    if (slides.length < 2) return;
+
+    viewport.dataset.swiperReady = 'true';
+    viewport.setAttribute('aria-roledescription', 'carousel');
+    viewport.setAttribute('aria-label', 'عروض مباريات كأس العالم 2026');
+
+    const card = (viewport.closest('.hero-swiper-card') as HTMLElement) ||
+      (viewport.parentElement as HTMLElement);
+    const dotsContainer = card.querySelector(
+      '.hero-swiper-dots'
+    ) as HTMLElement | null;
+    let index = 0;
+    let timer: number | null = null;
+    let interactionTimer: number | null = null;
+
+    function showCta(temporary: boolean) {
+      card.classList.add('is-interacting');
+      if (interactionTimer) window.clearTimeout(interactionTimer);
+      if (temporary) {
+        interactionTimer = window.setTimeout(() => {
+          card.classList.remove('is-interacting');
+          interactionTimer = null;
+        }, 2600);
+      }
+    }
+
+    function goTo(nextIndex: number) {
+      index = (nextIndex + slides.length) % slides.length;
+      track.style.transform = `translateX(${index * 100}%)`;
+      updateDots();
+    }
+
+    function updateDots() {
+      if (!dotsContainer) return;
+      const dots = dotsContainer.querySelectorAll<HTMLButtonElement>('button');
+      dots.forEach((dot, i) => {
+        dot.setAttribute('aria-current', String(i === index));
+      });
+    }
+
+    // بناء النقاط
+    if (dotsContainer) {
+      dotsContainer.innerHTML = '';
+      slides.forEach((_, i) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'hero-swiper-dot';
+        button.setAttribute('aria-label', `عرض الشريحة ${i + 1}`);
+        button.setAttribute('role', 'tab');
+        button.addEventListener('click', () => {
+          showCta(true);
+          goTo(i);
+        });
+        dotsContainer.appendChild(button);
+      });
+      updateDots();
+    }
+
+    // أزرار التنقل
+    const prev = document.createElement('button');
+    prev.type = 'button';
+    prev.className = 'hero-swiper-nav hero-swiper-prev';
+    prev.setAttribute('aria-label', 'الشريحة السابقة');
+    prev.innerHTML = '&#10095;';
+    prev.addEventListener('click', () => {
+      showCta(true);
+      goTo(index - 1);
+    });
+
+    const next = document.createElement('button');
+    next.type = 'button';
+    next.className = 'hero-swiper-nav hero-swiper-next';
+    next.setAttribute('aria-label', 'الشريحة التالية');
+    next.innerHTML = '&#10094;';
+    next.addEventListener('click', () => {
+      showCta(true);
+      goTo(index + 1);
+    });
+
+    card.appendChild(prev);
+    card.appendChild(next);
+
+    // Autoplay
+    function startAutoplay() {
+      if (timer) return;
+      timer = window.setInterval(() => {
+        if (!card.classList.contains('is-interacting')) {
+          goTo(index + 1);
+        }
+      }, 5000);
+    }
+
+    function stopAutoplay() {
+      if (timer) {
+        window.clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    // إيقاف عند التفاعل
+    card.addEventListener('mouseenter', stopAutoplay);
+    card.addEventListener('mouseleave', startAutoplay);
+    card.addEventListener('focusin', stopAutoplay);
+    card.addEventListener('focusout', startAutoplay);
+
+    // Swipe support على اللمس
+    let startX = 0;
+    let deltaX = 0;
+    let isSwiping = false;
+
+    viewport.addEventListener(
+      'touchstart',
+      (e) => {
+        startX = e.touches[0].clientX;
+        isSwiping = true;
+        stopAutoplay();
+      },
+      { passive: true }
+    );
+
+    viewport.addEventListener(
+      'touchmove',
+      (e) => {
+        if (!isSwiping) return;
+        deltaX = e.touches[0].clientX - startX;
+      },
+      { passive: true }
+    );
+
+    viewport.addEventListener('touchend', () => {
+      if (!isSwiping) return;
+      isSwiping = false;
+      if (Math.abs(deltaX) > 50) {
+        if (deltaX > 0) goTo(index + 1); // RTL: سحب يمين = التالي
+        else goTo(index - 1);
+      }
+      startAutoplay();
+    });
+
+    // دعم لوحة المفاتيح
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') goTo(index + 1);
+      if (e.key === 'ArrowRight') goTo(index - 1);
+    });
+
+    // احترام prefers-reduced-motion
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (!motionQuery.matches) {
+      startAutoplay();
+    }
+  }
+
+  // Lazy init - ابدأ فقط عندما يكون القسم مرئيًا
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          initHeroSwiper();
+          observer.disconnect();
+        }
+      });
+    },
+    { rootMargin: '200px' }
+  );
+
+  const heroEl = document.getElementById('hero');
+  if (heroEl) observer.observe(heroEl);
+</script>
